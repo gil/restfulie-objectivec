@@ -43,7 +43,8 @@
 
 - (void) dealloc
 {
-	[data release];
+	[self.data release];
+    [(NSObject *)self.client release];
 	[super dealloc];
 }
 

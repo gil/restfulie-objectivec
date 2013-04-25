@@ -51,6 +51,12 @@
 	return self;
 }
 
+- (Request*)setTimeoutSeconds:(int)timeout {
+	
+	[self.request setTimeOutSeconds:timeout];
+	return self;
+}
+
 -(Response *) get 
 {
 	[self.request startSynchronous];
@@ -58,13 +64,19 @@
 	Response *response = [Response initWithData:[self.request responseString] andClient:self.client];
 	[response setCode:[request responseStatusCode]];
 	
+	//NSLog(@"response (%@): %@", self.uri, [request responseString]);
+	
 	return response;
 }
 
 -(Response*) post {
 
 	[self.request setRequestMethod:@"POST"];
+	[self.request setUseKeychainPersistence:NO];
+	[self.request setShouldAttemptPersistentConnection:NO];
 	[self.request startSynchronous];
+	
+	//NSLog(@"response (%@): %@", self.uri, [request responseString]);
 	
 	Response *response = [Response initWithData:[self.request responseString] andClient:self.client];
 	[response setCode:[self.request responseStatusCode]];
@@ -84,6 +96,12 @@
 	[self.request setRequestMethod:@"POST"];
 	[self.request startSynchronous];
 	
+	if (self.request.error) {
+		NSLog(@"error %@", self.request.error);
+	}
+	
+	NSLog(@"response text %@",[self.request responseString]);
+	
 	Response *response = [Response initWithData:[self.request responseString] andClient:self.client];
 	[response setCode:[self.request responseStatusCode]];
 	
@@ -92,9 +110,11 @@
 
 -(void) dealloc {
 	
-	[uri release];
-	[error release];
-	[request release];
+	[self.uri release];
+	[self.error release];
+    [(NSObject *)self.mediaType release];
+    [self.client release];
+	[self.request release];
 	[super dealloc];
 }
 

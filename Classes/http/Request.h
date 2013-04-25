@@ -66,4 +66,6 @@
  */
 -(Response*) post;
 
+- (Request*)setTimeoutSeconds:(int)timeout;
+
 @end

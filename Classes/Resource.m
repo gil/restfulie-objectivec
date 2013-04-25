@@ -28,20 +28,20 @@
 
 @synthesize typesToEnhance;
 
-- (id) initWithData:(id)data ofType:(Class)clazz {
+- (id) objectForData:(id)data ofType:(Class)clazz {
 
 	if ([data isKindOfClass:[NSDictionary class]]) {
 		return [self createObjWithDictionary:data ofType:clazz];
 	} else {
-		return [self initWithArray:data ofType:clazz];
+		return [self arrayWithObject:data ofType:clazz];
 	}
 	
 }
 
-- (id) initWithData:(id)data ofType:(Class)clazz typesToEnhance:(id)types {
+- (id) objectForData:(id)data ofType:(Class)clazz typesToEnhance:(id)types {
 
 	self.typesToEnhance = types;
-	return [self initWithData:data ofType:clazz];
+	return [self objectForData:data ofType:clazz];
 }
 
 //private
@@ -76,7 +76,8 @@
 			id type = [self.typesToEnhance objectForKey:key];
 			
 			if (type != nil) {
-				id composedResource = [[[Resource alloc] initWithArray:i ofType:type typesToEnhance:self.typesToEnhance] autorelease];
+                Resource *arrayRes = [[[Resource alloc] init] autorelease];
+				id composedResource = [arrayRes arrayWithObject:i ofType:type typesToEnhance:self.typesToEnhance];
 				NSLog(@"%@", [composedResource description]);
 				
 				//[mutableDict setObject:composedResource forKey:key];
@@ -87,7 +88,7 @@
 	}
 	
 	[obj setValuesForKeysWithDictionary:mutableDict];
-	return obj;
+	return [obj autorelease];
 }
 
 - (void) removeUnavailableKeys:(NSMutableDictionary*)dictionary comparedToObject:(id)obj {
@@ -99,20 +100,20 @@
 }
 
 
-- (id) initWithArray:(NSArray *)array ofType:(Class)clazz {
+- (id) arrayWithObject:(NSArray *)array ofType:(Class)clazz {
 	
 	NSMutableArray *objsArray = [[NSMutableArray alloc] init];
 	
 	for (id obj in array) 
 		[objsArray addObject:[self createObjWithDictionary:obj ofType:clazz]];
 		
-	return objsArray;
+	return [objsArray autorelease];
 }
 
-- (id) initWithArray:(NSArray *)array ofType:(Class)clazz typesToEnhance:(id)types {
+- (id) arrayWithObject:(NSArray *)array ofType:(Class)clazz typesToEnhance:(id)types {
 
 	self.typesToEnhance = types;
-	return [self initWithArray:array ofType:clazz];
+	return [self arrayWithObject:array ofType:clazz];
 }
 
 @end

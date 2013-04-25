@@ -23,6 +23,7 @@
 #import "JsonMediaType.h"
 #import "JSONUnmarshaller.h"
 #import "NSObject+Properties.h"
+#import "Resource.h"
 #import "JSONKit.h"
 
 @implementation JsonMediaType
@@ -33,9 +34,9 @@
 {
 	self = [super init];
 	if (self != nil) {
-		self.typesToEnhance = [[NSMutableDictionary alloc] init];
-		self.includes = [[NSMutableDictionary alloc] init];
-		self.excludes = [[NSMutableArray alloc] init];
+		self.typesToEnhance = [[[NSMutableDictionary alloc] init] autorelease];
+		self.includes = [[[NSMutableDictionary alloc] init] autorelease];
+		self.excludes = [[[NSMutableArray alloc] init] autorelease];
 	}
 	return self;
 }
@@ -71,8 +72,9 @@
 	NSLog(@"%@", type);
 	//NSLog(@"%@", [dataDictionary description]);
 	
-	id resource = [[[Resource alloc] initWithData:[dataDictionary objectForKey:identifier] ofType:type typesToEnhance:self.typesToEnhance] autorelease];
-	return resource;
+    Resource *resource = [[[Resource alloc] init] autorelease];
+	id returningResource = [resource objectForData:[dataDictionary objectForKey:identifier] ofType:type typesToEnhance:self.typesToEnhance];
+	return returningResource;
 }
 
 - (id) marshall:(id)object forClient:(id)client {
@@ -113,7 +115,6 @@
 	[newIncludes release];
 	
 	NSDictionary *dict = [[NSDictionary dictionaryWithObject:objDict forKey:identifier] retain];
-	/*NSString *json = [[SBJsonWriter alloc] stringWithObject:dict];*/
 	
 	[objDict release];
 	[dict release];

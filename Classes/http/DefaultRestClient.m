@@ -28,7 +28,7 @@
 @synthesize mediaTypes;
 
 -(Request*) at:(NSString *)uri {
-	
+
 	return [Request requestWithURI:uri andClient:self];
 }
 
@@ -45,6 +45,12 @@
 -(void) exclude:(NSString *)property {
 	
 	[[self currentMediaType] exclude:property];
+}
+
+- (void)dealloc {
+    
+    [self.mediaTypes release];
+    [super dealloc];
 }
 
 @end

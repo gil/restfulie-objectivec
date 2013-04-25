@@ -22,23 +22,27 @@
 
 
 #import "JSONUnmarshaller.h"
-//#import "JSON.h"
 #import "JSONKit.h"
 
 @implementation JSONUnmarshaller
 
 -(NSDictionary *) unmarshall:(NSObject *)data {
 	
-	//	return [[SBJsonParser alloc] objectWithString:(NSString *)data];
-	
 	if ([data isKindOfClass:[NSString class]]) {
+        
+        NSString *jsonStr = (NSString*)data;
+        NSLog(@"json %@", jsonStr);
+		id json = [jsonStr objectFromJSONStringWithParseOptions:JKParseOptionStrict];
+		
+		if ( json == nil ) {
+			NSLog(@"couldn't parse the json!");
+			[NSException raise:@"ParserError" format:@"couldn't parse the json!"];
+		}
+		
+		return json;
 	
-		NSString *jsonStr = (NSString*)data;
-		return [jsonStr objectFromJSONString];
 	}
 	
-
-	//[NSException raise:@"Json unmarshaller falied!" format:@"NSString excepted!"];
 	return nil;
 }
 

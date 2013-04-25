@@ -21,7 +21,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "Resource.h";
 #import "RestClient.h"
 
 @interface Response : NSObject {
